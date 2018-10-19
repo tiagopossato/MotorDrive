@@ -2,32 +2,40 @@
 #define MOTORDRIVE_H
 #include "Arduino.h"
 
+typedef enum Direction
+{
+	CW = 0,
+	CCW,
+	PAUSE,
+	STOP
+} Direction;
+
 //Definição da classe
 class MotorDrive
 {
-  public:
-	//Métodos e atributos público
 
-	//Construtor da classe
+  public:
+	//Métodos e atributos públicos
 	MotorDrive(
 		unsigned char _pinA,
 		unsigned char _pinB,
 		unsigned char _speedPin);
-	//Inicializador
 	void begin();
 	//Gira o motor no sentido horário, com partida suave
 	void runClockwise(unsigned char speed, bool softStarter);
 	//Gira o motor no sentido horário, sem partida suave
 	void runClockwise(unsigned char speed);
 	//Gira o motor no sentido anti horário
-	void runAntiClockwise(unsigned char speed);
+	void runCounterClockwise(unsigned char speed);
 	//Gira o motor no sentido anti horário, com partida suave
-	void runAntiClockwise(unsigned char speed, bool softStarter);
-
+	void runCounterClockwise(unsigned char speed, bool softStarter);
 	//Para o motor
 	void stop();
+	//Pausa o motor
 	void pause();
+	//Retoma o funcionamento do motor após uma pausa
 	void resume();
+	//Retorna a velocidade atual do motor
 	unsigned char getCurrentSpeed();
 
   private:
@@ -35,11 +43,9 @@ class MotorDrive
 	unsigned char pinA;
 	unsigned char pinB;
 	unsigned char speedPin;
-	bool direction[2];
 	unsigned char currentSpeed;
-	//Altera
-	void setDirection(unsigned char statePinA, unsigned char statePinB);
-	//altera a velocidade do motor
-	void setSpeed(unsigned char speed, bool softStarter);
+	boolean isPaused;
+	Direction currentDirection;
+	void run(unsigned char speed, bool softStarter, Direction direction);
 };
 #endif
